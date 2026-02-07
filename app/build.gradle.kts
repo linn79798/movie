@@ -28,6 +28,7 @@ android {
 
 dependencies {
     compileOnly("com.github.recloudstream:cloudstream:master-SNAPSHOT")
+    implementation("com.github.Lagradost:NiceHttp:0.4.1")
     implementation(kotlin("stdlib"))
     implementation("org.jsoup:jsoup:1.15.3")
 }

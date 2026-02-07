@@ -38,7 +38,7 @@ class Hoathinh3DProvider : MainAPI() {
 
         return newAnimeSearchResponse(title, href, TvType.Anime) {
             this.posterUrl = posterUrl
-            addSub(episode)
+            addSub(episode?.filter { it.isDigit() }?.toIntOrNull())
         }
     }
 
@@ -61,14 +61,16 @@ class Hoathinh3DProvider : MainAPI() {
         val episodes = document.select(".halim-list-eps li a").map {
             val href = it.attr("href")
             val name = it.text()
-            Episode(href, name)
+            newEpisode(href) {
+                this.name = name
+            }
         }
 
         return newAnimeLoadResponse(title, url, TvType.Anime) {
             this.posterUrl = poster
             this.plot = description
-            this.tags = listOf(originalTitle ?: "")
-            addEpisodes(episodes)
+            this.tags = listOfNotNull(originalTitle)
+            addEpisodes(TvType.Anime, episodes)
         }
     }
 
@@ -92,7 +94,7 @@ class Hoathinh3DProvider : MainAPI() {
         // Attempt to find iframes or sources directly
         val source = document.selectFirst("#halim-player iframe")?.attr("src")
         if (source != null) {
-            loadExtractor(source, data, subtitleCallback, callback)
+            loadExtractor(source, subtitleCallback, callback)
         }
 
         return true
