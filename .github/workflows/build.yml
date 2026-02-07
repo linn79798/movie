@@ -31,6 +31,7 @@ jobs:
         run: |
           mkdir -p build_output
           find . -name "*.cs3" -exec cp {} build_output/ \;
+          cp plugins.json build_output/
           cd build_output
           git init
           git checkout -b builds
