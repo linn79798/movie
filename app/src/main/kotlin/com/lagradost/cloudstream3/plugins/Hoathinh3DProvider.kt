@@ -12,6 +12,14 @@ class Hoathinh3DProvider : MainAPI() {
     override var lang = "vi"
     override val supportedTypes = setOf(TvType.Anime, TvType.Movie)
 
+    // Add headers to bypass bot protection
+    override val headers: Map<String, String>
+        get() = super.headers.toMutableMap().apply {
+            put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            put("Referer", "$mainUrl/")
+            put("Origin", mainUrl)
+        }
+
     override val mainPage = mainPageOf(
         "$mainUrl/page/" to "Mới Cập Nhật",
         "$mainUrl/hot/page/" to "Phim Hot",
