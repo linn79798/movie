@@ -70,7 +70,7 @@ class Hoathinh3DProvider : MainAPI() {
             this.posterUrl = poster
             this.plot = description
             this.tags = listOfNotNull(originalTitle)
-            addEpisodes(TvType.Anime, episodes)
+            addEpisodes(DubStatus.Subbed, episodes)
         }
     }
 
