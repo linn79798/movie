@@ -1,0 +1,38 @@
+[
+    {
+        "iconUrl": "https://gitlab.com/tearrs/movie/-/raw/main/icon/lock.ico",
+        "apiVersion": 1,
+        "repositoryUrl": "https://gitlab.com/tearrs/cloudstream-vietnamese",
+        "fileSize": 8878,
+        "status": 1,
+        "authors": [
+            "anhdaden"
+        ],
+        "tvTypes": [
+            "Others"
+        ],
+        "version": 1,
+        "internalName": "MovieProvider",
+        "description": "Phải cài đặt repo này và kích hoạt mới tải được các nguồn bên dưới",
+        "url": "https://gitlab.com/tearrs/cloudstream-vietnamese/-/raw/main/MovieProvider.cs3",
+        "name": "ActiveMoviePluginProvider"
+    },
+    {
+        "iconUrl": "https://hoathinh3d.ee/wp-content/uploads/2025/02/cropped-favicon_hh-400x400.png",
+        "apiVersion": 1,
+        "repositoryUrl": "",
+        "fileSize": 20000,
+        "status": 1,
+        "authors": [
+            "Neji"
+        ],
+        "tvTypes": [
+            "Anime"
+        ],
+        "version": 1,
+        "internalName": "Hoathinh3DProvider",
+        "description": "Hoạt Hình 3D Trung Quốc",
+        "url": "https://gitlab.com/tearrs/movie/-/raw/main/Hoathinh3DProvider.cs3",
+        "name": "Hoathinh3DProvider"
+    }
+]
