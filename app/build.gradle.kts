@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    compileOnly("com.github.recloudstream:cloudstream:pre-release")
+    compileOnly("com.github.recloudstream:cloudstream:master-SNAPSHOT")
     implementation(kotlin("stdlib"))
     implementation("org.jsoup:jsoup:1.13.1")
 }
