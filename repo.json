@@ -1,5 +1,6 @@
 {
-    "name": "Tu Movie Repository",
+    "name": "Tu-Movie Repository",
+    "description": "Hoạt hình 3D Provider",
     "manifestVersion": 1,
     "pluginLists": [
         "https://raw.githubusercontent.com/linn79798/movie/builds/plugins.json"
