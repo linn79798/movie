@@ -82,19 +82,46 @@ class Hoathinh3DProvider : MainAPI() {
     ): Boolean {
         val document = app.get(data).document
 
-        // Halim theme usually stores sources in scripts or iframes
-        // Check for common servers in Halim themes
-        document.select("script").forEach { script ->
-            val html = script.html()
-            if (html.contains("halim_cfg")) {
-                // Extract player logic if needed, often standard halim handling
-            }
+        // Extract required parameters from the active episode element
+        val activeEpisode = document.selectFirst(".halim-episode.active a")
+        val postId = activeEpisode?.attr("data-post-id")
+        val chapterSt = activeEpisode?.attr("data-ep")
+        val sv = activeEpisode?.attr("data-sv")
+
+        if (postId == null || chapterSt == null || sv == null) {
+            return false
         }
 
-        // Attempt to find iframes or sources directly
-        val source = document.selectFirst("#halim-player iframe")?.attr("src")
-        if (source != null) {
-            loadExtractor(source, subtitleCallback, callback)
+        // Find available server types (e.g., VIP, Pro, 4K)
+        val serverTypes = document.select(".get-eps[data-type]").mapNotNull { it.attr("data-type") }.distinct()
+        // If no specific types found, try with empty type (default)
+        val typesToTry = if (serverTypes.isNotEmpty()) serverTypes else listOf("")
+
+        typesToTry.forEach { type ->
+            try {
+                val ajaxUrl = "$mainUrl/player/player.php"
+                val ajaxDoc = app.get(
+                    ajaxUrl,
+                    params = mapOf(
+                        "action" to "dox_ajax_player",
+                        "post_id" to postId,
+                        "chapter_st" to chapterSt,
+                        "type" to type,
+                        "sv" to sv
+                    ),
+                    headers = mapOf(
+                        "X-Requested-With" to "XMLHttpRequest",
+                        "Referer" to data
+                    )
+                ).document
+
+                val iframeSrc = ajaxDoc.selectFirst("iframe")?.attr("src")
+                if (!iframeSrc.isNullOrBlank()) {
+                    loadExtractor(iframeSrc, subtitleCallback, callback)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         return true
