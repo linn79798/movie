@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    compileOnly("com.github.Lagradost:CloudStream-3:pre-release")
+    compileOnly("com.github.recloudstream:cloudstream:pre-release")
     implementation(kotlin("stdlib"))
     implementation("org.jsoup:jsoup:1.13.1")
 }
