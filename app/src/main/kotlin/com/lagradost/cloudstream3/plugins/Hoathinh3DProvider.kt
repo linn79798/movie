@@ -12,13 +12,11 @@ class Hoathinh3DProvider : MainAPI() {
     override var lang = "vi"
     override val supportedTypes = setOf(TvType.Anime, TvType.Movie)
 
-    // Add headers to bypass bot protection
-    override val headers: Map<String, String>
-        get() = super.headers.toMutableMap().apply {
-            put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-            put("Referer", "$mainUrl/")
-            put("Origin", mainUrl)
-        }
+    private val protectionHeaders = mapOf(
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer" to "$mainUrl/",
+        "Origin" to mainUrl
+    )
 
     override val mainPage = mainPageOf(
         "$mainUrl/page/" to "Mới Cập Nhật",
@@ -31,7 +29,7 @@ class Hoathinh3DProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val url = request.data + page
-        val document = app.get(url).document
+        val document = app.get(url, headers = protectionHeaders).document
         val home = document.select("article.post, .halim-item").mapNotNull {
             it.toSearchResult()
         }
@@ -52,14 +50,14 @@ class Hoathinh3DProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/?s=$query"
-        val document = app.get(url).document
+        val document = app.get(url, headers = protectionHeaders).document
         return document.select("article.post, .halim-item").mapNotNull {
             it.toSearchResult()
         }
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val document = app.get(url).document
+        val document = app.get(url, headers = protectionHeaders).document
 
         val title = document.selectFirst(".entry-title")?.text()?.trim() ?: ""
         val poster = document.selectFirst(".movie-poster img")?.attr("src")
@@ -88,7 +86,7 @@ class Hoathinh3DProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val document = app.get(data).document
+        val document = app.get(data, headers = protectionHeaders).document
 
         // Extract required parameters from the active episode element
         val activeEpisode = document.selectFirst(".halim-episode.active a")
@@ -123,7 +121,7 @@ class Hoathinh3DProvider : MainAPI() {
                         "type" to type,
                         "sv" to sv
                     ),
-                    headers = mapOf(
+                    headers = protectionHeaders + mapOf(
                         "X-Requested-With" to "XMLHttpRequest",
                         "Referer" to data
                     )
