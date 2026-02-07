@@ -84,9 +84,15 @@ class Hoathinh3DProvider : MainAPI() {
 
         // Extract required parameters from the active episode element
         val activeEpisode = document.selectFirst(".halim-episode.active a")
-        val postId = activeEpisode?.attr("data-post-id")
+        var postId = activeEpisode?.attr("data-post-id")
         val chapterSt = activeEpisode?.attr("data-ep")
         val sv = activeEpisode?.attr("data-sv")
+
+        // Fallback: Try to get post_id from Javascript variable if missing
+        if (postId == null) {
+            val script = document.select("script").find { it.html().contains("DoPostInfo") }?.html()
+            postId = script?.substringAfter("id:")?.substringBefore(",")?.trim()
+        }
 
         if (postId == null || chapterSt == null || sv == null) {
             return false
@@ -104,7 +110,7 @@ class Hoathinh3DProvider : MainAPI() {
                     ajaxUrl,
                     params = mapOf(
                         "action" to "dox_ajax_player",
-                        "post_id" to postId,
+                        "post_id" to postId!!,
                         "chapter_st" to chapterSt,
                         "type" to type,
                         "sv" to sv
@@ -115,7 +121,7 @@ class Hoathinh3DProvider : MainAPI() {
                     )
                 ).document
 
-                val iframeSrc = ajaxDoc.selectFirst("iframe")?.attr("src")
+                val iframeSrc = ajaxDoc.selectFirst("iframe")?.attr("abs:src")
                 if (!iframeSrc.isNullOrBlank()) {
                     loadExtractor(iframeSrc, subtitleCallback, callback)
                 }
